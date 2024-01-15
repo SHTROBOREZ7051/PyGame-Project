@@ -168,7 +168,7 @@ class Spike(Tile):
     def __init__(self, pos_x, pos_y):
         self.pos_x = pos_x
         self.pos_y = pos_y
-        super().__init__("spike", self.pos_x, self.pos_y, tile_group_name=tiles_group)
+        super().__init__("spike", self.pos_x, self.pos_y, tile_group_name=spike_group)
 
 
 # Класс пули
@@ -575,8 +575,7 @@ if __name__ == "__main__":
     nLevel = start_screen(WIDTH, HEIGHT)
     levelFile = load_level(levelList[nLevel])
     running = True
-    
-    moveLeft, moveRight, moveUp, moveDown = False, False, False, False
+    moveLeft, moveRight, moveUp, moveDown, makeshot = False, False, False, False, False
     player, levelX, levelY = generate_level(levelFile)
     # Игровой цикл
     while running:
@@ -615,7 +614,8 @@ if __name__ == "__main__":
                     if pygame.key.get_mods() & pygame.KMOD_LCTRL:
                         player.shot(rocketShot=True)
                     else:
-                        player.shot()
+                        makeshot = True
+                        
                 
             if event.type == pygame.KEYUP:
                 # Исли клавиша подниматся, то хдьба прекращается
@@ -627,6 +627,8 @@ if __name__ == "__main__":
                     moveLeft = False
                 if event.key == pygame.K_d:
                     moveRight = False
+                if event.key == pygame.K_SPACE:
+                    makeshot = False
                     
         if moveUp:
             player.move("UP")
@@ -639,6 +641,9 @@ if __name__ == "__main__":
         
         if moveRight:
             player.move("RIGHT")
+        
+        if makeshot:
+            player.shot()
         
         if player.checkTile() == "!":
             win_screen(WIDTH, HEIGHT)
